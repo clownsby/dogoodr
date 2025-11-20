@@ -1,0 +1,24 @@
+name: Daily Eugene Job Scrape
+
+on:
+  schedule:
+    - cron: '0 14 * * *' # Runs at 6:00 AM PST daily
+  workflow_dispatch: # Allows you to click the manual run button
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Feed Engine
+        run: node scripts/feed-engine.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
